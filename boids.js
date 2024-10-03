@@ -22,12 +22,6 @@ if (/Mobi|Android/i.test(navigator.userAgent)) {
       mouseY = event.touches[0].clientY;
     }
   });
-
-  document.addEventListener('touchend', () => {
-    mouseX = -1000;
-    mouseY = -1000;
-  });
-
 }
 
 var boids = [];
@@ -47,7 +41,6 @@ function initBoids() {
       y: Math.random() * height,
       dx: Math.random() * 10 - 5,
       dy: Math.random() * 10 - 5,
-      history: [],
     };
   }
 }
@@ -59,15 +52,6 @@ function distance(boid1, boid2) {
   );
 }
 
-// TODO: This is naive and inefficient.
-function nClosestBoids(boid, n) {
-  // Make a copy
-  const sorted = boids.slice();
-  // Sort the copy by distance from `boid`
-  sorted.sort((a, b) => distance(boid, a) - distance(boid, b));
-  // Return the `n` closest
-  return sorted.slice(1, n + 1);
-}
 
 // Called initially and whenever the window resizes to update the canvas
 // size and width/height variables.
@@ -208,8 +192,6 @@ function limitSpeed(boid) {
   }
 }
 
-const DRAW_TRAIL = false;
-
 function drawBoid(ctx, boid) {
   const angle = Math.atan2(boid.dy, boid.dx);
   ctx.translate(boid.x, boid.y);
@@ -223,16 +205,6 @@ function drawBoid(ctx, boid) {
   ctx.lineTo(boid.x, boid.y);
   ctx.fill();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-  if (DRAW_TRAIL) {
-    ctx.strokeStyle = "#558cf466";
-    ctx.beginPath();
-    ctx.moveTo(boid.history[0][0], boid.history[0][1]);
-    for (const point of boid.history) {
-      ctx.lineTo(point[0], point[1]);
-    }
-    ctx.stroke();
-  }
 }
 
 // Main animation loop
@@ -250,8 +222,6 @@ function animationLoop() {
     // Update the position based on the current velocity
     boid.x += boid.dx;
     boid.y += boid.dy;
-    boid.history.push([boid.x, boid.y])
-    boid.history = boid.history.slice(-50);
   }
 
   // Clear the canvas and redraw all the boids in their current positions
