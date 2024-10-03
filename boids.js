@@ -89,8 +89,8 @@ function sizeCanvas() {
 // Constrain a boid to within the window. If it gets too close to an edge,
 // nudge it back in and reverse its direction.
 function keepWithinBounds(boid) {
-  const margin = 200;
-  const turnFactor = 1;
+  const margin = 10;
+  const turnFactor = 0.5;
 
   if (boid.x < margin) {
     boid.dx += turnFactor;
@@ -200,7 +200,6 @@ function matchVelocity(boid) {
 // Speed will naturally vary in flocking behavior, but real animals can't go
 // arbitrarily fast.
 function limitSpeed(boid) {
-  const speedLimit = 15;
 
   const speed = Math.sqrt(boid.dx * boid.dx + boid.dy * boid.dy);
   if (speed > speedLimit) {
@@ -216,7 +215,7 @@ function drawBoid(ctx, boid) {
   ctx.translate(boid.x, boid.y);
   ctx.rotate(angle);
   ctx.translate(-boid.x, -boid.y);
-  ctx.fillStyle = "#558cf4";
+  ctx.fillStyle = "#efff78";
   ctx.beginPath();
   ctx.moveTo(boid.x, boid.y);
   ctx.lineTo(boid.x - 15, boid.y + 5);
@@ -243,6 +242,7 @@ function animationLoop() {
     // Update the velocities according to each rule
     flyTowardsCenter(boid);
     avoidOthers(boid);
+    avoidCursor(boid);
     matchVelocity(boid);
     limitSpeed(boid);
     keepWithinBounds(boid);
