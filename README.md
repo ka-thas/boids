@@ -5,11 +5,9 @@ Copyright 2020 Ben Eater
 This code is [MIT licensed](http://en.wikipedia.org/wiki/MIT_License).
 
 ## What is this?
-This is a simple demonstration of the boids algorithm that's featured in this Smarter Every Day video:
+This is a simple demonstration of the boids algorithm that's featured in this [Smarter Every Day video](https://www.youtube.com/watch?v=4LWmRuB-uNU)
 
-[<img src=https://img.youtube.com/vi/4LWmRuB-uNU/maxresdefault.jpg width=360/>](https://www.youtube.com/watch?v=4LWmRuB-uNU)
-
-This simulation is running on [my website](https://eater.net/boids) if you’d like to check it out.
+This simulation is running on [my website](https://kathas.tech/projects/boids) if you’d like to check it out.
 
 ## How does it work?
 
@@ -39,7 +37,7 @@ It ought to run in any web browser. Download (or clone) the files. Then, just do
 
 There are lots of features you could try adding to the code yourself:
 
-- Add a predator that the boids try to avoid that scatters the flock if it gets too close.
+- Add a predator that the boids try to avoid that scatters the flock if it gets too close. I made it the cursor.
 - Add a strong wind or current to see what effect it has on the flock.
 - Add "perching" behavior. If a boid gets close to the bottom of the screen, have it land and hang out on the ground for a bit before taking off again and rejoining the flock.
 - Make it 3D! The boids' velocity is currently represented as a 2D vector. You could change them to 3D vectors and update the vector math to work. To draw in 3D, you could just change the size of the boids to represent how far away they are.
