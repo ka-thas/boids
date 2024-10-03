@@ -111,6 +111,26 @@ function avoidOthers(boid) {
   boid.dy += moveY * avoidFactor;
 }
 
+function avoidCursor(boid) {
+  const minDistance = 10;
+  const maxDistance = 200;
+  const avoidFactor = 0.01;
+  let moveX = 0;
+  let moveY = 0;
+
+  const cursor = { x: mouseX, y: mouseY };
+  const dist = distance(boid, cursor);
+
+  if (dist < maxDistance) {
+    const strength = (maxDistance - dist) / (maxDistance - minDistance);
+    moveX += (boid.x - cursor.x) * strength;
+    moveY += (boid.y - cursor.y) * strength;
+  }
+
+  boid.dx += moveX * avoidFactor;
+  boid.dy += moveY * avoidFactor;
+}
+
 // Find the average velocity (speed and direction) of the other boids and
 // adjust velocity slightly to match.
 function matchVelocity(boid) {
