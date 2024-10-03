@@ -3,7 +3,32 @@ let width = 150;
 let height = 150;
 
 const numBoids = 100;
-const visualRange = 75;
+const speedLimit = 8;
+let visualRange = 75;
+
+let isVisitedOnPhone = false;
+
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+  if (localStorage.getItem('visitedOnPhone')) {
+    isVisitedOnPhone = true;
+  } else {
+    localStorage.setItem('visitedOnPhone', 'true');
+  }
+
+  // Track finger movement on touch devices
+  document.addEventListener('touchmove', (event) => {
+    if (event.touches.length > 0) {
+      mouseX = event.touches[0].clientX;
+      mouseY = event.touches[0].clientY;
+    }
+  });
+
+  document.addEventListener('touchend', () => {
+    mouseX = -1000;
+    mouseY = -1000;
+  });
+
+}
 
 var boids = [];
 
@@ -52,6 +77,13 @@ function sizeCanvas() {
   height = window.innerHeight;
   canvas.width = width;
   canvas.height = height;
+
+  // Adjust visual range for smaller screens
+  if (width < 600) {
+    visualRange = 20;
+  } else {
+    visualRange = 75;
+  }
 }
 
 // Constrain a boid to within the window. If it gets too close to an edge,
