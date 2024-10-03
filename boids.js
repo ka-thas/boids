@@ -7,6 +7,14 @@ const visualRange = 75;
 
 var boids = [];
 
+let mouseX = 0;
+let mouseY = 0;
+
+document.addEventListener('mousemove', (event) => {
+  mouseX = event.clientX;
+  mouseY = event.clientY;
+});
+
 function initBoids() {
   for (var i = 0; i < numBoids; i += 1) {
     boids[boids.length] = {
