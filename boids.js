@@ -24,6 +24,14 @@ if (/Mobi|Android/i.test(navigator.userAgent)) {
   });
 }
 
+// Add event listener for buttons
+let theme = 'theme-birds';
+let buttons = document.getElementsByClassName('theme-btn');
+
+buttons[0].addEventListener('click', () => { changeTheme('theme-default'); });
+buttons[1].addEventListener('click', () => { changeTheme('theme-birds'); });
+buttons[2].addEventListener('click', () => { changeTheme('theme-fishes'); });
+
 var boids = [];
 
 let mouseX = 0;
@@ -197,7 +205,13 @@ function drawBoid(ctx, boid) {
   ctx.translate(boid.x, boid.y);
   ctx.rotate(angle);
   ctx.translate(-boid.x, -boid.y);
-  ctx.fillStyle = "#efff78";
+  if (theme == 'theme-default') {
+    ctx.fillStyle = "#efff78";
+  } else if (theme == 'theme-birds') {
+    ctx.fillStyle = "#222";
+  } else if (theme == 'theme-fishes') {
+    ctx.fillStyle = "#da7";
+  }
   ctx.beginPath();
   ctx.moveTo(boid.x, boid.y);
   ctx.lineTo(boid.x - 15, boid.y + 5);
@@ -246,3 +260,8 @@ window.onload = () => {
   // Schedule the main animation loop
   window.requestAnimationFrame(animationLoop);
 };
+
+function changeTheme(newTheme) {
+  document.body.className = newTheme;
+  theme = newTheme;
+}

@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    background-color: #222;
+    overflow: hidden;
+}
+.theme-default {
+    background: linear-gradient(
+        to right,
+        rgb(46, 71, 63) 0%,
+        rgb(47, 77, 53) 100%
+    );
+    background-color: #222;
+}
+.theme-fishes {
+    background: linear-gradient(
+        to bottom,
+        rgb(20, 94, 114) 0%,
+        rgb(30, 58, 120) 100%
+    );
+    background-color: #222;
+}
+.theme-birds {
+    background: linear-gradient(
+        to bottom,
+        rgb(168, 216, 255) 30%,
+        rgb(251, 255, 204) 100%
+    );
+    background-color: #222;
+}
+
+#menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+}
+button {
+    font-size: 20px;
+    padding: 5px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: #222;
+}

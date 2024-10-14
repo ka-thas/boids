@@ -3,21 +3,21 @@
     <head>
         <meta charset="utf-8" />
         <title>Boids</title>
-        <script src="./boids.js"></script>
-        <style type="text/css">
-            body {
-                margin: 0;
-                background: linear-gradient(
-                    to right,
-                    rgb(46, 71, 63) 0%,
-                    rgb(47, 77, 53) 100%
-                );
-                background-color: #222;
-                overflow: hidden;
-            }
-        </style>
+        <link rel="stylesheet" href="./styles.css" />
     </head>
-    <body>
+    <body class="theme-birds">
         <canvas id="boids" width="150" height="150"></canvas>
+        <div id="menu">
+            <button class="theme-btn" id="theme-default-btn">🌱</button>
+            <button class="theme-btn" id="theme-birds-btn">🪶</button>
+            <button class="theme-btn" id="theme-fishes-btn">🐠</button>
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const script = document.createElement("script");
+                script.src = "./boids.js";
+                document.body.appendChild(script);
+            });
+        </script>
     </body>
 </html>
