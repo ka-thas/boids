@@ -36,10 +36,25 @@ var boids = [];
 
 let mouseX = 0;
 let mouseY = 0;
+let isPaused = false;
+let showForces = false;
+const forceVisualScale = 200;
 
 document.addEventListener('mousemove', (event) => {
   mouseX = event.clientX;
   mouseY = event.clientY;
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.code === 'Space') {
+    event.preventDefault();
+    isPaused = !isPaused;
+    return;
+  }
+
+  if (event.code === 'KeyF') {
+    showForces = !showForces;
+  }
 });
 
 function initBoids() {
@@ -200,6 +215,180 @@ function limitSpeed(boid) {
   }
 }
 
+function computeForces(boid) {
+  const centeringFactor = 0.005;
+  const minDistance = 20;
+  const avoidFactor = 0.05;
+  const matchingFactor = 0.05;
+  const cursorMinDistance = 10;
+  const cursorMaxDistance = 200;
+  const cursorAvoidFactor = 0.01;
+  const margin = 10;
+  const turnFactor = 0.5;
+
+  let centerX = 0;
+  let centerY = 0;
+  let avgDX = 0;
+  let avgDY = 0;
+  let numNeighbors = 0;
+  let avoidX = 0;
+  let avoidY = 0;
+
+  for (let otherBoid of boids) {
+    if (otherBoid === boid) {
+      continue;
+    }
+
+    const dist = distance(boid, otherBoid);
+    if (dist < visualRange) {
+      centerX += otherBoid.x;
+      centerY += otherBoid.y;
+      avgDX += otherBoid.dx;
+      avgDY += otherBoid.dy;
+      numNeighbors += 1;
+    }
+
+    if (dist < minDistance) {
+      avoidX += boid.x - otherBoid.x;
+      avoidY += boid.y - otherBoid.y;
+    }
+  }
+
+  const forces = {
+    center: { x: 0, y: 0 },
+    avoid: { x: 0, y: 0 },
+    match: { x: 0, y: 0 },
+    cursor: { x: 0, y: 0 },
+    bounds: { x: 0, y: 0 },
+  };
+
+  if (numNeighbors) {
+    centerX = centerX / numNeighbors;
+    centerY = centerY / numNeighbors;
+    avgDX = avgDX / numNeighbors;
+    avgDY = avgDY / numNeighbors;
+
+    forces.center.x = (centerX - boid.x) * centeringFactor;
+    forces.center.y = (centerY - boid.y) * centeringFactor;
+    forces.match.x = (avgDX - boid.dx) * matchingFactor;
+    forces.match.y = (avgDY - boid.dy) * matchingFactor;
+  }
+
+  forces.avoid.x = avoidX * avoidFactor;
+  forces.avoid.y = avoidY * avoidFactor;
+
+  const cursor = { x: mouseX, y: mouseY };
+  const cursorDist = distance(boid, cursor);
+  if (cursorDist < cursorMaxDistance) {
+    const strength = (cursorMaxDistance - cursorDist) / (cursorMaxDistance - cursorMinDistance);
+    forces.cursor.x = (boid.x - cursor.x) * strength * cursorAvoidFactor;
+    forces.cursor.y = (boid.y - cursor.y) * strength * cursorAvoidFactor;
+  }
+
+  if (boid.x < margin) {
+    forces.bounds.x += turnFactor;
+  }
+  if (boid.x > width - margin) {
+    forces.bounds.x -= turnFactor;
+  }
+  if (boid.y < margin) {
+    forces.bounds.y += turnFactor;
+  }
+  if (boid.y > height - margin) {
+    forces.bounds.y -= turnFactor;
+  }
+
+  return forces;
+}
+
+function drawArrow(ctx, fromX, fromY, toX, toY, color) {
+  const headLength = 6;
+  const angle = Math.atan2(toY - fromY, toX - fromX);
+
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = 2;
+
+  ctx.beginPath();
+  ctx.moveTo(fromX, fromY);
+  ctx.lineTo(toX, toY);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(toX, toY);
+  ctx.lineTo(
+    toX - headLength * Math.cos(angle - Math.PI / 6),
+    toY - headLength * Math.sin(angle - Math.PI / 6),
+  );
+  ctx.lineTo(
+    toX - headLength * Math.cos(angle + Math.PI / 6),
+    toY - headLength * Math.sin(angle + Math.PI / 6),
+  );
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawForceVectors(ctx, boid) {
+  const forces = computeForces(boid);
+  const originX = boid.x;
+  const originY = boid.y;
+
+  drawArrow(
+    ctx,
+    originX,
+    originY,
+    originX + forces.center.x * forceVisualScale,
+    originY + forces.center.y * forceVisualScale,
+    '#6aa84f',
+  );
+  drawArrow(
+    ctx,
+    originX,
+    originY,
+    originX + forces.avoid.x * forceVisualScale,
+    originY + forces.avoid.y * forceVisualScale,
+    '#e69138',
+  );
+  drawArrow(
+    ctx,
+    originX,
+    originY,
+    originX + forces.match.x * forceVisualScale,
+    originY + forces.match.y * forceVisualScale,
+    '#3d85c6',
+  );
+  drawArrow(
+    ctx,
+    originX,
+    originY,
+    originX + forces.cursor.x * forceVisualScale,
+    originY + forces.cursor.y * forceVisualScale,
+    '#cc0000',
+  );
+  drawArrow(
+    ctx,
+    originX,
+    originY,
+    originX + forces.bounds.x * forceVisualScale,
+    originY + forces.bounds.y * forceVisualScale,
+    '#999999',
+  );
+
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(originX, originY, visualRange, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+function getFocusBoid() {
+  if (!boids.length) {
+    return null;
+  }
+
+  return boids[0];
+}
+
 function drawBoid(ctx, boid) {
   const angle = Math.atan2(boid.dy, boid.dx);
   ctx.translate(boid.x, boid.y);
@@ -223,19 +412,21 @@ function drawBoid(ctx, boid) {
 
 // Main animation loop
 function animationLoop() {
-  // Update each boid
-  for (let boid of boids) {
-    // Update the velocities according to each rule
-    flyTowardsCenter(boid);
-    avoidOthers(boid);
-    avoidCursor(boid);
-    matchVelocity(boid);
-    limitSpeed(boid);
-    keepWithinBounds(boid);
+  if (!isPaused) {
+    // Update each boid
+    for (let boid of boids) {
+      // Update the velocities according to each rule
+      flyTowardsCenter(boid);
+      avoidOthers(boid);
+      avoidCursor(boid);
+      matchVelocity(boid);
+      limitSpeed(boid);
+      keepWithinBounds(boid);
 
-    // Update the position based on the current velocity
-    boid.x += boid.dx;
-    boid.y += boid.dy;
+      // Update the position based on the current velocity
+      boid.x += boid.dx;
+      boid.y += boid.dy;
+    }
   }
 
   // Clear the canvas and redraw all the boids in their current positions
@@ -243,6 +434,13 @@ function animationLoop() {
   ctx.clearRect(0, 0, width, height);
   for (let boid of boids) {
     drawBoid(ctx, boid);
+  }
+
+  if (showForces) {
+    const focusBoid = getFocusBoid();
+    if (focusBoid) {
+      drawForceVectors(ctx, focusBoid);
+    }
   }
 
   // Schedule the next frame
