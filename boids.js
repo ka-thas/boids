@@ -76,7 +76,31 @@ document.addEventListener('keydown', (event) => {
   if (event.code === 'KeyM') {
     toggleMenu();
   }
+
+  const digit = digitFromKeyCode(event.code);
+  if (digit !== null) {
+    setNumBoids(digit);
+  }
 });
+
+function digitFromKeyCode(code) {
+  const match = /^Digit([0-9])$/.exec(code) || /^Numpad([0-9])$/.exec(code);
+  return match ? parseInt(match[1], 10) : null;
+}
+
+function setNumBoids(count) {
+  config.numBoids = count;
+  syncBoidCount();
+
+  const input = document.getElementById('num-boids-input');
+  const valueLabel = document.getElementById('num-boids-value');
+  if (input) {
+    input.value = count;
+  }
+  if (valueLabel) {
+    valueLabel.textContent = count;
+  }
+}
 
 function initBoids() {
   for (var i = 0; i < config.numBoids; i += 1) {
