@@ -68,6 +68,7 @@ document.addEventListener('keydown', (event) => {
 
   if (event.code === 'KeyF') {
     showForces = !showForces;
+    updateForceLegend();
   }
 
   if (event.code === 'KeyM') {
@@ -113,6 +114,13 @@ function setMenuOpen(open) {
 
 function toggleMenu() {
   setMenuOpen(!menuOpen);
+}
+
+function updateForceLegend() {
+  const legend = document.getElementById('force-legend');
+  if (legend) {
+    legend.classList.toggle('visible', showForces);
+  }
 }
 
 // Wires up the settings panel: the toggle button/key, close-on-outside-click,
