@@ -8,10 +8,54 @@
     </head>
     <body class="theme-birds">
         <canvas id="boids" width="150" height="150"></canvas>
-        <div id="menu">
-            <button class="theme-btn" id="theme-default-btn">🌱</button>
-            <button class="theme-btn" id="theme-birds-btn">🪶</button>
-            <button class="theme-btn" id="theme-fishes-btn">🐠</button>
+        <button id="menu-toggle-btn" aria-label="Toggle settings menu" title="Toggle settings (M)">Boids</button>
+        <div id="settings-panel">
+            <div class="settings-section">
+                <h3>Theme</h3>
+                <div class="theme-buttons">
+                    <button class="theme-btn" id="theme-default-btn">🌱</button>
+                    <button class="theme-btn" id="theme-birds-btn">🪶</button>
+                    <button class="theme-btn" id="theme-fishes-btn">🐠</button>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>Population</h3>
+                <label class="setting-row" for="num-boids-input">
+                    <span class="setting-label">Number of boids</span>
+                    <input type="range" id="num-boids-input" min="10" max="400" step="1" value="100" />
+                    <span class="setting-value" id="num-boids-value">100</span>
+                </label>
+            </div>
+
+            <div class="settings-section">
+                <h3>Forces</h3>
+                <label class="setting-row" for="cohesion-input">
+                    <span class="setting-label">Cohesion</span>
+                    <input type="range" id="cohesion-input" min="0" max="0.02" step="0.0005" value="0.005" />
+                    <span class="setting-value" id="cohesion-value">0.005</span>
+                </label>
+                <label class="setting-row" for="separation-input">
+                    <span class="setting-label">Separation</span>
+                    <input type="range" id="separation-input" min="0" max="0.2" step="0.005" value="0.05" />
+                    <span class="setting-value" id="separation-value">0.05</span>
+                </label>
+                <label class="setting-row" for="alignment-input">
+                    <span class="setting-label">Alignment</span>
+                    <input type="range" id="alignment-input" min="0" max="0.2" step="0.005" value="0.05" />
+                    <span class="setting-value" id="alignment-value">0.05</span>
+                </label>
+                <label class="setting-row" for="speed-limit-input">
+                    <span class="setting-label">Speed limit</span>
+                    <input type="range" id="speed-limit-input" min="1" max="20" step="0.5" value="8" />
+                    <span class="setting-value" id="speed-limit-value">8</span>
+                </label>
+                <label class="setting-row" for="cursor-avoid-input">
+                    <span class="setting-label">Cursor avoidance</span>
+                    <input type="range" id="cursor-avoid-input" min="0" max="0.05" step="0.001" value="0.01" />
+                    <span class="setting-value" id="cursor-avoid-value">0.01</span>
+                </label>
+            </div>
         </div>
         <script>
             document.addEventListener("DOMContentLoaded", function () {

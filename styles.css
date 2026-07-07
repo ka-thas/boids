@@ -28,12 +28,6 @@ body {
     background-color: #222;
 }
 
-#menu {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 10px;
-}
 button {
     font-size: 20px;
     padding: 5px;
@@ -41,4 +35,93 @@ button {
     border: none;
     cursor: pointer;
     background-color: #222;
+}
+
+#menu-toggle-btn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 20;
+    color: #fff;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#settings-panel {
+    position: fixed;
+    top: 64px;
+    left: 10px;
+    max-height: calc(100vh - 84px);
+    width: 280px;
+    max-width: calc(85vw - 20px);
+    box-sizing: border-box;
+    background-color: rgba(20, 20, 20, 0.85);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    overflow-y: auto;
+    transform: translateX(calc(-100% - 20px)) scale(0.97);
+    opacity: 0;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+    z-index: 15;
+    pointer-events: none;
+}
+
+#settings-panel.open {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#settings-panel h2 {
+    margin: 0 0 20px;
+    font-size: 18px;
+}
+
+.settings-section {
+    margin-bottom: 24px;
+}
+
+.settings-section h3 {
+    margin: 0 0 10px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #aaa;
+}
+
+.theme-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    font-size: 13px;
+}
+
+.setting-label {
+    flex: 0 0 100px;
+}
+
+.setting-row input[type="range"] {
+    flex: 1;
+    min-width: 0;
+}
+
+.setting-value {
+    flex: 0 0 40px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
 }
