@@ -63,12 +63,14 @@ document.addEventListener('keydown', (event) => {
   if (event.code === 'Space') {
     event.preventDefault();
     isPaused = !isPaused;
+    syncPauseCheckbox();
     return;
   }
 
   if (event.code === 'KeyF') {
     showForces = !showForces;
     updateForceLegend();
+    syncShowForcesCheckbox();
   }
 
   if (event.code === 'KeyM') {
@@ -120,6 +122,20 @@ function updateForceLegend() {
   const legend = document.getElementById('force-legend');
   if (legend) {
     legend.classList.toggle('visible', showForces);
+  }
+}
+
+function syncShowForcesCheckbox() {
+  const checkbox = document.getElementById('show-forces-input');
+  if (checkbox) {
+    checkbox.checked = showForces;
+  }
+}
+
+function syncPauseCheckbox() {
+  const checkbox = document.getElementById('pause-input');
+  if (checkbox) {
+    checkbox.checked = isPaused;
   }
 }
 
@@ -176,6 +192,23 @@ function initMenu() {
     config.cursorAvoidFactor = value;
     return value.toFixed(3);
   });
+
+  const showForcesCheckbox = document.getElementById('show-forces-input');
+  if (showForcesCheckbox) {
+    showForcesCheckbox.checked = showForces;
+    showForcesCheckbox.addEventListener('change', () => {
+      showForces = showForcesCheckbox.checked;
+      updateForceLegend();
+    });
+  }
+
+  const pauseCheckbox = document.getElementById('pause-input');
+  if (pauseCheckbox) {
+    pauseCheckbox.checked = isPaused;
+    pauseCheckbox.addEventListener('change', () => {
+      isPaused = pauseCheckbox.checked;
+    });
+  }
 }
 
 // Binds a range input to a display span. `onChange` receives the numeric

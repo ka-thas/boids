@@ -126,6 +126,21 @@ button {
     font-variant-numeric: tabular-nums;
 }
 
+.checkbox-row {
+    justify-content: space-between;
+}
+
+.checkbox-row .setting-label {
+    flex: 1;
+}
+
+.checkbox-row input[type="checkbox"] {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
 #force-legend {
     position: fixed;
     bottom: 10px;
